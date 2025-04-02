@@ -7,6 +7,7 @@ import com.example.Ql_ThuNhap.Dto.Response.ThuNhapResponse;
 import com.example.Ql_ThuNhap.Dto.Response.TotalIncomeResponse;
 import com.example.Ql_ThuNhap.Dto.Update.ThuNhapUpdateRequest;
 import com.example.Ql_ThuNhap.Service.ThuNhapService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +23,28 @@ public class ThuNhapController {
     private ThuNhapService thuNhapService;
 
     @PostMapping("/add")
-    public ResponseEntity<ThuNhapResponse> createThuNhap(@RequestBody ThuNhapRequest thuNhapRequest) {
-        return ResponseEntity.ok(thuNhapService.createThuNhap(thuNhapRequest));
+    ApiResponse<ThuNhapResponse> createThuNhap(@RequestBody @Valid ThuNhapRequest thuNhapRequest) {
+        return ApiResponse.<ThuNhapResponse>builder()
+                .result(thuNhapService.createThuNhap(thuNhapRequest))
+                .build();
     }
+
 
     @GetMapping("/list")
-    public List<ThuNhapResponse> getAllThuNhap() {
-        return thuNhapService.getAllThuNhap();
+    ApiResponse<List<ThuNhapResponse>> getAllThuNhap() {
+        return ApiResponse.<List<ThuNhapResponse>>builder()
+                .result(thuNhapService.getAllThuNhap())
+                .build();
     }
 
+
     @GetMapping("/{thuNhapId}")
-    public ThuNhapResponse getThuNhap(
-            @PathVariable("thuNhapId") Long thuNhapId) {
-        return thuNhapService.getThuNhap(thuNhapId);
+    ApiResponse<ThuNhapResponse> getThuNhap(@PathVariable("thuNhapId") Long thuNhapId) {
+        return ApiResponse.<ThuNhapResponse>builder()
+                .result(thuNhapService.getThuNhap(thuNhapId))
+                .build();
     }
+
     @GetMapping("/user/{userId}")
     public ApiResponse<List<ThuNhapResponse>> getThuNhapByUserId(@PathVariable Long userId) {
         return ApiResponse.<List<ThuNhapResponse>>builder()
@@ -43,16 +52,22 @@ public class ThuNhapController {
                 .build();
     }
     @GetMapping("/total-income/{userId}")
-    public ResponseEntity<TotalIncomeResponse> getTotalIncome(@PathVariable Long userId) {
-        return ResponseEntity.ok(thuNhapService.getTotalIncomeByUserId(userId));
+    ApiResponse<TotalIncomeResponse> getTotalIncome(@PathVariable Long userId) {
+        return ApiResponse.<TotalIncomeResponse>builder()
+                .result(thuNhapService.getTotalIncomeByUserId(userId))
+                .build();
     }
 
+
     @PutMapping("/{thuNhapId}")
-    public ResponseEntity<ThuNhapResponse> updateThuNhap(
+    ApiResponse<ThuNhapResponse> updateThuNhap(
             @PathVariable Long thuNhapId,
-            @RequestBody ThuNhapUpdateRequest request) {
-        return ResponseEntity.ok(thuNhapService.updateThuNhap(thuNhapId, request));
+            @RequestBody @Valid ThuNhapUpdateRequest request) {
+        return ApiResponse.<ThuNhapResponse>builder()
+                .result(thuNhapService.updateThuNhap(thuNhapId, request))
+                .build();
     }
+
     @DeleteMapping("/{thuNhapId}")
     ApiResponse<String> deleteThuNhap(@PathVariable Long thuNhapId){
         thuNhapService.deleteThuNhap(thuNhapId);

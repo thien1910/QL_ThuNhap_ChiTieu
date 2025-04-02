@@ -6,6 +6,7 @@ import com.example.Ql_ThuNhap.Dto.Response.ChiTieuResponse;
 import com.example.Ql_ThuNhap.Dto.Response.TotalExpenseResponse;
 import com.example.Ql_ThuNhap.Dto.Update.ChiTieuUpdateRequest;
 import com.example.Ql_ThuNhap.Service.ChiTieuService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +21,28 @@ public class ChiTieuControlller {
     private ChiTieuService chiTieuService;
 
     @PostMapping("/add")
-    public ResponseEntity<ChiTieuResponse> createChiTieu(@RequestBody ChiTieuRequest chiTieuRequest) {
-        return ResponseEntity.ok(chiTieuService.createChiTieu(chiTieuRequest));
+    ApiResponse<ChiTieuResponse> createChiTieu(@RequestBody @Valid ChiTieuRequest chiTieuRequest) {
+        return ApiResponse.<ChiTieuResponse>builder()
+                .result(chiTieuService.createChiTieu(chiTieuRequest))
+                .build();
     }
+
 
     @GetMapping("/list")
-    public List<ChiTieuResponse> getAllChiTieu() {
-        return chiTieuService.getAllChiTieu();
+    ApiResponse<List<ChiTieuResponse>> getAllChiTieu() {
+        return ApiResponse.<List<ChiTieuResponse>>builder()
+                .result(chiTieuService.getAllChiTieu())
+                .build();
     }
 
+
     @GetMapping("/{chiTieuId}")
-    public ChiTieuResponse getThuNhap(
-            @PathVariable("chiTieuId") Long chiTieuId) {
-        return chiTieuService.getChiTieu(chiTieuId);
+    ApiResponse<ChiTieuResponse> getThuNhap(@PathVariable("chiTieuId") Long chiTieuId) {
+        return ApiResponse.<ChiTieuResponse>builder()
+                .result(chiTieuService.getChiTieu(chiTieuId))
+                .build();
     }
+
     @GetMapping("/user/{userId}")
     public ApiResponse<List<ChiTieuResponse>> getChiTieuByUserId(@PathVariable Long userId) {
         return ApiResponse.<List<ChiTieuResponse>>builder()
@@ -41,9 +50,12 @@ public class ChiTieuControlller {
                 .build();
     }
     @GetMapping("/total-expense/{userId}")
-    public ResponseEntity<TotalExpenseResponse> getTotalExpense(@PathVariable Long userId) {
-        return ResponseEntity.ok(chiTieuService.getTotalExpenseByUserId(userId));
+    ApiResponse<TotalExpenseResponse> getTotalExpense(@PathVariable Long userId) {
+        return ApiResponse.<TotalExpenseResponse>builder()
+                .result(chiTieuService.getTotalExpenseByUserId(userId))
+                .build();
     }
+
 
     @PutMapping("/{chiTieuId}")
     ApiResponse<ChiTieuResponse> updateChiTieu(

@@ -6,6 +6,7 @@ import com.example.Ql_ThuNhap.Dto.Response.TietKiemResponse;
 import com.example.Ql_ThuNhap.Dto.Response.TotalSavingResponse;
 import com.example.Ql_ThuNhap.Dto.Update.TietKiemUpdateRequest;
 import com.example.Ql_ThuNhap.Service.TietKiemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +22,28 @@ public class TietKiemController {
     private TietKiemService tietKiemService;
 
     @PostMapping("/add")
-    public ResponseEntity<TietKiemResponse> createTietKiem(@RequestBody TietKiemRequest tietKiemRequest) {
-        return ResponseEntity.ok(tietKiemService.createTietKiem(tietKiemRequest));
+    ApiResponse<TietKiemResponse> createTietKiem(@RequestBody @Valid TietKiemRequest tietKiemRequest) {
+        return ApiResponse.<TietKiemResponse>builder()
+                .result(tietKiemService.createTietKiem(tietKiemRequest))
+                .build();
     }
+
 
     @GetMapping("/list")
-    public List<TietKiemResponse> getAllTietKiem() {
-        return tietKiemService.getAllTietKiem();
+    ApiResponse<List<TietKiemResponse>> getAllTietKiem() {
+        return ApiResponse.<List<TietKiemResponse>>builder()
+                .result(tietKiemService.getAllTietKiem())
+                .build();
     }
 
+
     @GetMapping("/{tietKiemId}")
-    public TietKiemResponse getTietKiem(
-            @PathVariable("tietKiemId") Long tietKiemId) {
-        return tietKiemService.getTietKiem(tietKiemId);
+    ApiResponse<TietKiemResponse> getTietKiem(@PathVariable("tietKiemId") Long tietKiemId) {
+        return ApiResponse.<TietKiemResponse>builder()
+                .result(tietKiemService.getTietKiem(tietKiemId))
+                .build();
     }
+
     @GetMapping("/user/{userId}")
     public ApiResponse<List<TietKiemResponse>> getTietKiemByUserId(@PathVariable Long userId) {
         return ApiResponse.<List<TietKiemResponse>>builder()
@@ -42,16 +51,22 @@ public class TietKiemController {
                 .build();
     }
     @GetMapping("/total-saving/{userId}")
-    public ResponseEntity<TotalSavingResponse> getTotalSaving(@PathVariable Long userId) {
-        return ResponseEntity.ok(tietKiemService.getTotalSavingByUserId(userId));
+    ApiResponse<TotalSavingResponse> getTotalSaving(@PathVariable Long userId) {
+        return ApiResponse.<TotalSavingResponse>builder()
+                .result(tietKiemService.getTotalSavingByUserId(userId))
+                .build();
     }
 
+
     @PutMapping("/{tietKiemId}")
-    public ResponseEntity<TietKiemResponse> updateTietKiem(
+    ApiResponse<TietKiemResponse> updateTietKiem(
             @PathVariable Long tietKiemId,
-            @RequestBody TietKiemUpdateRequest tietKiemRequest) {
-        return ResponseEntity.ok(tietKiemService.updateTietKiem(tietKiemId, tietKiemRequest));
+            @RequestBody @Valid TietKiemUpdateRequest tietKiemRequest) {
+        return ApiResponse.<TietKiemResponse>builder()
+                .result(tietKiemService.updateTietKiem(tietKiemId, tietKiemRequest))
+                .build();
     }
+
 
     @DeleteMapping("/{tietKiemId}")
     ApiResponse<String> deleteTietKiem(@PathVariable Long tietKiemId){

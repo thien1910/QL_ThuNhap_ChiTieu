@@ -73,6 +73,11 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
+                .userId(user.getUserId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .dateOfBirth(user.getDateOfBirth())
+                .soDu(user.getSoDu())
                 .build();
     }
 

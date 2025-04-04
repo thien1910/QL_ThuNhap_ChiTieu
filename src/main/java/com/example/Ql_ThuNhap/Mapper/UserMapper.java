@@ -14,4 +14,5 @@ public interface UserMapper {
     @Mapping(target = "soDu", source = "soDu") // ánh xạ số dư
     UserResponse toUserResponse(User user);
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
+
 }

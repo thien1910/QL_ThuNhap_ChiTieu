@@ -2,6 +2,7 @@ package com.example.Ql_ThuNhap.Controller;
 
 import com.example.Ql_ThuNhap.Dto.Request.ApiResponse;
 import com.example.Ql_ThuNhap.Dto.Request.UserCreationRequest;
+import com.example.Ql_ThuNhap.Dto.Update.UserPasswordUpdateRequest;
 import com.example.Ql_ThuNhap.Dto.Response.UserResponse;
 import com.example.Ql_ThuNhap.Dto.Update.UserUpdateRequest;
 import com.example.Ql_ThuNhap.Service.UserService;
@@ -47,6 +48,14 @@ public class UserController {
                 .result(userService.updateUser(userId, request))
                 .build();
     }
+    @PutMapping("/updatePassword/{userId}")
+    ApiResponse<Void> updatePassword(@PathVariable Long userId, @RequestBody UserPasswordUpdateRequest request) {
+        userService.updatePassword(userId, request);
+        return ApiResponse.<Void>builder()
+                .message("Mật khẩu đã được cập nhật thành công")
+                .build();
+    }
+
 
     @DeleteMapping("/{userId}")
     ApiResponse<String> deleteUser(@PathVariable String userId){

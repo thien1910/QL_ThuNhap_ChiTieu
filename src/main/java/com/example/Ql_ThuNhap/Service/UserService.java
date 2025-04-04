@@ -2,6 +2,7 @@ package com.example.Ql_ThuNhap.Service;
 
 
 import com.example.Ql_ThuNhap.Dto.Request.UserCreationRequest;
+import com.example.Ql_ThuNhap.Dto.Update.UserPasswordUpdateRequest;
 import com.example.Ql_ThuNhap.Dto.Response.UserResponse;
 import com.example.Ql_ThuNhap.Dto.Update.UserUpdateRequest;
 import com.example.Ql_ThuNhap.Entity.User;
@@ -96,6 +97,19 @@ public class UserService {
         user.setSoDu(soDu);
         userRepository.save(user);
     }
+    public void updatePassword(Long userId, UserPasswordUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        // Kiểm tra mật khẩu cũ trước khi cập nhật
+        if (!passwordEncoder.matches(request.getMatKhauHienTai(), user.getPassWord())) {
+            return; // Không thực hiện cập nhật nếu mật khẩu cũ không đúng
+        }
+        // Cập nhật mật khẩu mới
+        user.setPassWord(passwordEncoder.encode(request.getMatKhauMoi()));
+        userRepository.save(user);
+    }
+
+
 }
 
 

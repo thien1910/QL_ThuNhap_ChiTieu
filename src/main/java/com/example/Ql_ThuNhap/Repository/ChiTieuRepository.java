@@ -13,5 +13,6 @@ public interface ChiTieuRepository extends JpaRepository<ChiTieu, Long> {
     List<ChiTieu> findByUser_UserId(Long userId);
     @Query("SELECT COALESCE(SUM(c.soTien), 0) FROM ChiTieu c WHERE c.user.userId = :userId")
     Long getTotalExpenseByUserId(@Param("userId") Long userId);
-
+    @Query("SELECT COALESCE(SUM(c.soTien), 0) FROM ChiTieu c WHERE c.user.userId = :userId AND MONTH(c.ngayChiTieu) = :month AND YEAR(c.ngayChiTieu) = :year")
+    Long getTotalExpenseByUserIdAndMonthYear(@Param("userId") Long userId, @Param("month") int month, @Param("year") int year);
 }

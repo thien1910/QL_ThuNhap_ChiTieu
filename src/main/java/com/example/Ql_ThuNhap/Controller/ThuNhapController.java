@@ -75,10 +75,20 @@ public class ThuNhapController {
                 .result("Thu nhập đã được xóa")
                 .build();
     }
+    // lấy ra so du, tong thu nhap, chi tieu, tiet kiem
     @GetMapping("/total-summary/{userId}")
     public ApiResponse<UserFinancialSummaryResponse> getUserFinancialSummary(@PathVariable Long userId) {
         return ApiResponse.<UserFinancialSummaryResponse>builder()
                 .result(thuNhapService.getUserFinancialSummary(userId))
+                .build();
+    }
+    @GetMapping("/total-summary-by-date/{userId}")
+    public ApiResponse<UserFinancialSummaryResponse> getUserFinancialSummaryByDate(
+            @PathVariable Long userId,
+            @RequestParam int month,
+            @RequestParam int year) {
+        return ApiResponse.<UserFinancialSummaryResponse>builder()
+                .result(thuNhapService.getUserFinancialSummaryByMonthYear(userId, month, year))
                 .build();
     }
 }

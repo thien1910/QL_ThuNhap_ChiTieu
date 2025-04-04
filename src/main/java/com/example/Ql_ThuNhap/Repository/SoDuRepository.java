@@ -16,4 +16,5 @@ public interface SoDuRepository extends JpaRepository<SoDu, Long> {
         WHERE u.userId = :userId
     """)
     Long getSoDuByUserId(@Param("userId") Long userId);
+
 }

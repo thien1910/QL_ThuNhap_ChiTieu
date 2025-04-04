@@ -2,12 +2,10 @@ package com.example.Ql_ThuNhap.Service;
 
 
 import com.example.Ql_ThuNhap.Dto.Request.ThuNhapRequest;
-import com.example.Ql_ThuNhap.Dto.Response.ChiTieuResponse;
 import com.example.Ql_ThuNhap.Dto.Response.ThuNhapResponse;
 import com.example.Ql_ThuNhap.Dto.Response.TotalIncomeResponse;
 import com.example.Ql_ThuNhap.Dto.Response.UserFinancialSummaryResponse;
 import com.example.Ql_ThuNhap.Dto.Update.ThuNhapUpdateRequest;
-import com.example.Ql_ThuNhap.Entity.ChiTieu;
 import com.example.Ql_ThuNhap.Entity.ThuNhap;
 import com.example.Ql_ThuNhap.Entity.User;
 import com.example.Ql_ThuNhap.Exception.AppException;
@@ -41,6 +39,7 @@ public class ThuNhapService {
     private ChiTieuRepository chiTieuRepository;
     @Autowired
    private TietKiemRepository tietKiemRepository;
+
 
 
     public ThuNhapResponse createThuNhap(ThuNhapRequest thuNhapRequest) {
@@ -140,7 +139,6 @@ public class ThuNhapService {
 
         // Lấy tổng số tiền tiết kiệm của user
         Long totalSaving = tietKiemRepository.getTotalSavingByUserId(userId);
-
         return UserFinancialSummaryResponse.builder()
                 .userId(userId)
                 .soDu(soDu)
@@ -149,6 +147,31 @@ public class ThuNhapService {
                 .totalSaving(totalSaving)
                 .build();
     }
+    public UserFinancialSummaryResponse getUserFinancialSummaryByMonthYear(Long userId, int month, int year) {
+        // Lấy người dùng từ cơ sở dữ liệu
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
 
+        // Lấy số dư hiện tại của người dùng
+        Long soDu = user.getSoDu();
+
+        // Lấy tổng thu nhập của người dùng theo tháng và năm
+        Long totalIncome = thuNhapRepository.getTotalIncomeByUserIdAndMonthYear(userId, month, year);
+
+        // Lấy tổng chi tiêu của người dùng theo tháng và năm
+        Long totalExpense = chiTieuRepository.getTotalExpenseByUserIdAndMonthYear(userId, month, year);
+
+        // Lấy tổng số tiền tiết kiệm của người dùng theo tháng và năm
+        Long totalSaving = tietKiemRepository.getTotalSavingByUserIdAndMonthYear(userId, month, year);
+
+        // Trả về thông tin tài chính của người dùng
+        return UserFinancialSummaryResponse.builder()
+                .userId(userId)
+                .soDu(soDu)
+                .totalIncome(totalIncome)
+                .totalExpense(totalExpense)
+                .totalSaving(totalSaving)
+                .build();
+    }
 
 }

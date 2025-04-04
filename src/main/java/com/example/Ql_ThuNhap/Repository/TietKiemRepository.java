@@ -14,4 +14,6 @@ public interface TietKiemRepository extends JpaRepository<TietKiem, Long> {
 
     @Query("SELECT COALESCE(SUM(t.soTien), 0) FROM TietKiem t WHERE t.user.userId = :userId")
     Long getTotalSavingByUserId(@Param("userId") Long userId);
+    @Query("SELECT COALESCE(SUM(t.soTien), 0) FROM TietKiem t WHERE t.user.userId = :userId AND MONTH(t.ngayGuiTietKiem) = :month AND YEAR(t.ngayGuiTietKiem) = :year")
+    Long getTotalSavingByUserIdAndMonthYear(@Param("userId") Long userId, @Param("month") int month, @Param("year") int year);
 }

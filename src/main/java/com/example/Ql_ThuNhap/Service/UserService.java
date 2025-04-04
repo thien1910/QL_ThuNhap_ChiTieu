@@ -57,6 +57,14 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
+/*
+    public UserResponse getMyInfo(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByuserName(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXITED));
+        return userMapper.toUserResponse(user);
+    }
+*/
 
     public UserResponse updateUser(Long userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId)
@@ -89,10 +97,5 @@ public class UserService {
         userRepository.save(user);
     }
 }
-    /*public UserResponse getMyInfo(){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByuserName(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXITED));
-        return userMapper.toUserResponse(user);
-    }*/
+
 

@@ -5,12 +5,17 @@ import com.example.Ql_ThuNhap.Dto.Request.ThuNhapRequest;
 import com.example.Ql_ThuNhap.Dto.Response.ChiTieuResponse;
 import com.example.Ql_ThuNhap.Dto.Response.ThuNhapResponse;
 import com.example.Ql_ThuNhap.Dto.Response.TotalIncomeResponse;
+import com.example.Ql_ThuNhap.Dto.Response.UserFinancialSummaryResponse;
 import com.example.Ql_ThuNhap.Dto.Update.ThuNhapUpdateRequest;
 import com.example.Ql_ThuNhap.Entity.ChiTieu;
 import com.example.Ql_ThuNhap.Entity.ThuNhap;
 import com.example.Ql_ThuNhap.Entity.User;
+import com.example.Ql_ThuNhap.Exception.AppException;
+import com.example.Ql_ThuNhap.Exception.ErrorCode;
 import com.example.Ql_ThuNhap.Mapper.ThuNhapMapper;
+import com.example.Ql_ThuNhap.Repository.ChiTieuRepository;
 import com.example.Ql_ThuNhap.Repository.ThuNhapRepository;
+import com.example.Ql_ThuNhap.Repository.TietKiemRepository;
 import com.example.Ql_ThuNhap.Repository.UserRepository;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +37,10 @@ public class ThuNhapService {
     private ThuNhapMapper thuNhapMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ChiTieuRepository chiTieuRepository;
+    @Autowired
+   private TietKiemRepository tietKiemRepository;
 
 
     public ThuNhapResponse createThuNhap(ThuNhapRequest thuNhapRequest) {
@@ -87,10 +96,24 @@ public class ThuNhapService {
 
         User user = thuNhap.getUser();
 
+        // Lấy tổng số dư hiện tại của người dùng
+        Long soDuHienTai = user.getSoDu();
+
+        // Lấy tổng số tiền chi tiêu của người dùng
+        Long totalExpense = chiTieuRepository.getTotalExpenseByUserId(user.getUserId());
+
+        // Lấy tổng số tiền tiết kiệm của người dùng (nếu có)
+        Long totalSaving = tietKiemRepository.getTotalSavingByUserId(user.getUserId());
+
+        // Nếu tổng số dư < (chi tiêu + tiết kiệm) thì không được xóa
+        if (soDuHienTai < (totalExpense + totalSaving)) {
+            throw new AppException(ErrorCode.SO_DU_KO_DU_DE_XOA);
+        }
+
         // Xóa thu nhập
         thuNhapRepository.delete(thuNhap);
 
-        // Cập nhật số dư
+        // Cập nhật số dư sau khi xóa thu nhập
         userService.updateSoDu(user.getUserId());
     }
 
@@ -102,7 +125,30 @@ public class ThuNhapService {
                 .totalIncome(totalIncome)
                 .build();
     }
+    public UserFinancialSummaryResponse getUserFinancialSummary(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
 
+        // Lấy số dư hiện tại
+        Long soDu = user.getSoDu();
+
+        // Lấy tổng thu nhập của user
+        Long totalIncome = thuNhapRepository.getTotalIncomeByUserId(userId);
+
+        // Lấy tổng chi tiêu của user
+        Long totalExpense = chiTieuRepository.getTotalExpenseByUserId(userId);
+
+        // Lấy tổng số tiền tiết kiệm của user
+        Long totalSaving = tietKiemRepository.getTotalSavingByUserId(userId);
+
+        return UserFinancialSummaryResponse.builder()
+                .userId(userId)
+                .soDu(soDu)
+                .totalIncome(totalIncome)
+                .totalExpense(totalExpense)
+                .totalSaving(totalSaving)
+                .build();
+    }
 
 
 }

@@ -5,12 +5,12 @@ import com.example.Ql_ThuNhap.Dto.Request.ApiResponse;
 import com.example.Ql_ThuNhap.Dto.Request.ThuNhapRequest;
 import com.example.Ql_ThuNhap.Dto.Response.ThuNhapResponse;
 import com.example.Ql_ThuNhap.Dto.Response.TotalIncomeResponse;
+import com.example.Ql_ThuNhap.Dto.Response.UserFinancialSummaryResponse;
 import com.example.Ql_ThuNhap.Dto.Update.ThuNhapUpdateRequest;
 import com.example.Ql_ThuNhap.Service.ThuNhapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -73,6 +73,12 @@ public class ThuNhapController {
         thuNhapService.deleteThuNhap(thuNhapId);
         return ApiResponse.<String>builder()
                 .result("Thu nhập đã được xóa")
+                .build();
+    }
+    @GetMapping("/total-summary/{userId}")
+    public ApiResponse<UserFinancialSummaryResponse> getUserFinancialSummary(@PathVariable Long userId) {
+        return ApiResponse.<UserFinancialSummaryResponse>builder()
+                .result(thuNhapService.getUserFinancialSummary(userId))
                 .build();
     }
 }

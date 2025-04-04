@@ -27,7 +27,8 @@ public enum ErrorCode {
     SO_TIEN_VUOT_QUA_HAN_MUC (1032, "Tổng số tiền chi tiết vượt quá số tiền chi tiêu", HttpStatus.BAD_REQUEST),
     TIET_KIEM_NOT_FOUND(1033, "Khoản tiết kiệm này không tồn tại", HttpStatus.NOT_FOUND),
     NGAY_GUI_PHẢI_TRƯỚC_NGAY_DAT_MUC_TIEU(1034, "Ngày gửi vào phải trước ngày đạt được mục tiêu" , HttpStatus.BAD_REQUEST),
-    Email(1035, "Email đã tồn tại", HttpStatus.BAD_REQUEST)
+    Email(1035, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
+    SO_DU_KO_DU_DE_XOA(1036, "Không thể xóa thu nhập vì số dư không đủ." , HttpStatus.BAD_REQUEST)
 
     ;
 

@@ -45,7 +45,13 @@ public class UserService {
     public UserResponse createUser(UserCreationRequest request) {
         // Kiểm tra email đã tồn tại hay chưa
         if (userRepository.existsByEmail(request.getEmail()))
-                throw new AppException(ErrorCode.Email);
+            throw new AppException(ErrorCode.Email);
+
+        // Kiểm tra email có đúng định dạng @gmail.com không
+        String email = request.getEmail();
+        if (!email.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$"))
+            throw new AppException(ErrorCode.Invalid_Email_Format);
+
         User user = userMapper.toUser(request);
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -53,6 +59,7 @@ public class UserService {
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
+
 
     public UserResponse getUser(Long userId){
         return userMapper.toUserResponse(userRepository.findById(userId)

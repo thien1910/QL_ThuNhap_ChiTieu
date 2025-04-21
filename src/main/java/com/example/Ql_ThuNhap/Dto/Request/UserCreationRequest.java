@@ -1,6 +1,8 @@
 package com.example.Ql_ThuNhap.Dto.Request;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,8 +14,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    Long userId;
     String fullName;
+    @NotBlank(message = "Email không được để trống")
+    @Email(message = "Email không đúng định dạng")
+    @Column(nullable = false, unique = true)
     String email;
     String passWord;
     LocalDate dateOfBirth;

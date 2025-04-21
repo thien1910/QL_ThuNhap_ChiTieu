@@ -15,9 +15,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
     String fullName;
-    @NotBlank(message = "Email không được để trống")
-    @Email(message = "Email không đúng định dạng")
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Email_Empty")
     String email;
     String passWord;
     LocalDate dateOfBirth;

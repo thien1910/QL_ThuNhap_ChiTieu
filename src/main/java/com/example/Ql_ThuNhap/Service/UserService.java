@@ -43,6 +43,8 @@ public class UserService {
     ThuNhapRepository thuNhapRepository;
 
     public UserResponse createUser(UserCreationRequest request) {
+        // Kiểm tra email có bị để trống không
+        validateEmailNotBlank(request.getEmail());
         // Kiểm tra email đã tồn tại hay chưa
         if (userRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.Email);
@@ -114,6 +116,11 @@ public class UserService {
         // Cập nhật mật khẩu mới
         user.setPassWord(passwordEncoder.encode(request.getMatKhauMoi()));
         userRepository.save(user);
+    }
+    private void validateEmailNotBlank(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new AppException(ErrorCode.Email_Empty);
+        }
     }
 
 
